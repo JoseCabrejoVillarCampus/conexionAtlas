@@ -1,0 +1,89 @@
+use("db_limit_mongo");
+db.createCollection("usuario",{
+    capped: true, //? configuracion manua
+    size: 690,
+    max: 5
+});
+
+use("db_limit_mongo");
+db.usuario.insertMany([
+    {
+        "nombre":"aaaaaaaaaaaaaaaaaa",
+        "apellido":"aaaaaaaaaaaaaaaaaa",
+        "edad":111
+    },
+    {
+        "nombre":"bbbbbbbbbbbbbbbbbbbb",
+        "apellido":"aaaaaaaaaaaaaaaaaa",
+        "edad":111
+    },
+    {
+        "nombre":"cccccccccccccccccccc",
+        "apellido":"aaaaaaaaaaaaaaaaaa",
+        "edad":111
+    },
+    {
+        "nombre":"dddddddddddddddddddd",
+        "apellido":"aaaaaaaaaaaaaaaaaa",
+        "edad":111
+    },
+    {
+        "nombre":"eeeeeeeeeeeeeeeeeeee",
+        "apellido":"aaaaaaaaaaaaaaaaaa",
+        "edad":111
+    },
+]);
+use("db_limit_mongo");
+db.createCollection('cliente'([
+    {
+        "title": "clienteSchema",
+        "required": [
+            "nombre",
+            "apellido",
+            "edad",
+        ],
+        "properties": {
+            "nombre": { "bsonType": "string" },
+            "apellido": { "bsonType": "string" }, 
+            "edad": { "bsonType": "number" }
+        }
+    }
+]));
+use("db_limit_mongo");
+db.createCollection("cliente", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["nombre", "apellido", "edad"],
+            properties:{
+                nombre:{
+                    bsonType: "string",
+                    description: 
+                    "Debe informar el campo nombre y este debe ser un string",
+                },
+                apellido:{
+                    bsonType: "string",
+                    description: 
+                    "Debe informar el campo apellido y este debe ser un string",
+                },
+                edad: {
+                    bsonType: "int",
+                    minimum: 0,
+                    maximum: 120,
+                    description:
+                    "El campo edad debe ser un número y estar comprendido entre 0 y 120",
+                }
+            }
+        },
+    },
+});
+
+use("db_limit_mongo");
+db.cliente.insertOne(
+    {
+        nombre:"aaaaaaaaaaaaaaaaaa",
+        apellido:"aaaaaaaaaaaaaaaaaa",
+        edad:111
+    }
+)
+

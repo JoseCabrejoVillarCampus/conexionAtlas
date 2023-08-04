@@ -1,13 +1,19 @@
+import { ObjectId } from "mongodb";
+import {con} from "../db/atlas.js"
+import { limitGrt } from "../middleware/limit.js";
 import { Router } from "express";
-import { configGET } from "../middleware/limit.js";
-import bodyParser from 'body-parser';
-
 const appCampus = Router();
 
-appCampus.get("/", configGET(), bodyParser.json({limit: '59b'}), (req,res)=>{
-    console.log(req.body);
-    console.log(req.rateLimit);
-    res.send("Hola");
+appCampus.get("/", limitGrt(), async(req,res)=>{
+    if(!req.rateLimit) return;
+    res.send
+    let {id} = req.body;
+    let db = await con();
+    let usuario = db.collection("usuario");
+    let result = await usuario.find({_id: new ObjectId});
+    res.send(result);
 });
 
 export default appCampus;
+//? como evitar que se escriban las colecciones cuando sobre pasa el limite maximo o cuando esta al tope maximo
+//? que es un esqume en mongo (dto)
